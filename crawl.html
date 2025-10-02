@@ -23,35 +23,36 @@
   </main>
 
     <script>
-        Papa.parse("hasil_crawl.csv", {
-        download: true,
-        header: true,
-        complete: function(results) {
-            let html = "<table><tr>";
-            
-            // Header tabel
-            Object.keys(results.data[0]).forEach(k => { 
-            html += `<th>${k}</th>`; 
+    Papa.parse("hasil_crawl.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        let html = "<table><tr>";
+    
+        // Buat header tabel otomatis
+        Object.keys(results.data[0]).forEach(k => { 
+          html += `<th>${k}</th>`; 
+        });
+        html += "</tr>";
+    
+        // Isi tabel otomatis
+        results.data.forEach(row => {
+          if (row["id"]) {  // skip baris kosong
+            html += "<tr>";
+            Object.values(row).forEach(v => {
+              html += `<td>${v ?? ""}</td>`;
             });
             html += "</tr>";
-            
-            // Isi tabel
-            results.data.forEach(row => {
-            if (row["id"]) { // skip baris kosong
-                html += "<tr>";
-                html += `<td>${row["id"]}</td>`;
-                html += `<td>${row["judul berita"]}</td>`;
-                html += `<td>${row["isi berita"]}</td>`;
-                html += `<td>${row["kategori"]}</td>`;
-                html += "</tr>";
-            }
-            });
-            
-            html += "</table>";
-            document.getElementById("tabel").innerHTML = html;
-        }
+          }
         });
+    
+        html += "</table>";
+        document.getElementById("tabel").innerHTML = html;
+      }
+    });
+
     </script>
 
 </body>
 </html>
+
