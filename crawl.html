@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hasil Crawling Berita</title>
   <link rel="stylesheet" href="style.css">
-  <!-- PapaParse untuk membaca CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
@@ -22,33 +21,37 @@
     <div id="tabel"></div>
   </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script>
-  Papa.parse("hasil_crawl.csv", {
-    download: true,
-    header: true,
-    complete: function(results) {
-      let html = "<table><tr>";
-      Object.keys(results.data[0]).forEach(k => { html += `<th>${k}</th>`; });
-      html += "</tr>";
-
-      results.data.forEach(row => {
-        if (row["id"]) {
-          html += "<tr>";
-          html += `<td>${row["id"]}</td>`;
-          html += `<td>${row["Judul Berita"]}</td>`;
-          html += `<td>${row["Isi Berita"]}</td>`;
-          html += `<td>${row["Kategori Berita"]}</td>`;
-          html += "</tr>";
+  <script>
+    Papa.parse("hasil_crawl.csv", {
+      download: true,
+      header: true,
+      skipEmptyLines: true, // buang baris kosong
+      complete: function(results) {
+        if (results.errors.length) {
+          console.error("CSV Parse Error:", results.errors);
         }
-      });
-      html += "</table>";
-      document.getElementById("tabel").innerHTML = html;
-    }
-  });
-</script>
+        
+        let html = "<table border='1' cellpadding='5'><tr>";
+        
+        // Buat header tabel otomatis
+        Object.keys(results.data[0]).forEach(k => { 
+          html += `<th>${k}</th>`; 
+        });
+        html += "</tr>";
 
+        // Isi tabel
+        results.data.forEach(row => {
+          html += "<tr>";
+          Object.values(row).forEach(v => {
+            html += `<td>${v || ""}</td>`;
+          });
+          html += "</tr>";
+        });
+
+        html += "</table>";
+        document.getElementById("tabel").innerHTML = html;
+      }
+    });
+  </script>
 </body>
 </html>
-
-
