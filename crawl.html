@@ -22,37 +22,33 @@
     <div id="tabel"></div>
   </main>
 
-    <script>
-    Papa.parse("hasil_crawl.csv", {
-      download: true,
-      header: true,
-      complete: function(results) {
-        let html = "<table><tr>";
-    
-        // Buat header tabel otomatis
-        Object.keys(results.data[0]).forEach(k => { 
-          html += `<th>${k}</th>`; 
-        });
-        html += "</tr>";
-    
-        // Isi tabel otomatis
-        results.data.forEach(row => {
-          if (row["id"]) {  // skip baris kosong
-            html += "<tr>";
-            Object.values(row).forEach(v => {
-              html += `<td>${v ?? ""}</td>`;
-            });
-            html += "</tr>";
-          }
-        });
-    
-        html += "</table>";
-        document.getElementById("tabel").innerHTML = html;
-      }
-    });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script>
+  Papa.parse("hasil_crawl.csv", {
+    download: true,
+    header: true,
+    complete: function(results) {
+      let html = "<table><tr>";
+      Object.keys(results.data[0]).forEach(k => { html += `<th>${k}</th>`; });
+      html += "</tr>";
 
-    </script>
+      results.data.forEach(row => {
+        if (row["id"]) {
+          html += "<tr>";
+          html += `<td>${row["id"]}</td>`;
+          html += `<td>${row["Judul Berita"]}</td>`;
+          html += `<td>${row["Isi Berita"]}</td>`;
+          html += `<td>${row["Kategori Berita"]}</td>`;
+          html += "</tr>";
+        }
+      });
+      html += "</table>";
+      document.getElementById("tabel").innerHTML = html;
+    }
+  });
+</script>
 
 </body>
 </html>
+
 
